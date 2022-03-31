@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "449283292826",
+    "firebase_url": "https://fir-led-f0542-default-rtdb.firebaseio.com",
+    "project_id": "fir-led-f0542",
+    "storage_bucket": "fir-led-f0542.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449283292826:android:fe89bbd8e363487816a923",
+        "android_client_info": {
+          "package_name": "com.example.appsmarthome"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449283292826-e9mk71g9lih7h0l0v0r1rml4f3du9mel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-gAhds1PvCOyEv79CLKX2bNHQ3UkBKrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449283292826-e9mk71g9lih7h0l0v0r1rml4f3du9mel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449283292826:android:f838afbffbec281716a923",
+        "android_client_info": {
+          "package_name": "com.example.mobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449283292826-e9mk71g9lih7h0l0v0r1rml4f3du9mel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-gAhds1PvCOyEv79CLKX2bNHQ3UkBKrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449283292826-e9mk71g9lih7h0l0v0r1rml4f3du9mel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
