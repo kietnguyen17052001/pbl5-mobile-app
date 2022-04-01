@@ -26,10 +26,6 @@ public class UserObj implements Parcelable {
         }
     };
 
-    public UserObj() {
-
-    }
-
     public String getFullName() {
         return fullName;
     }

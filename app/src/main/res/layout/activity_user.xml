@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserActivity"
     android:background="@color/belize_hole"
-    android:gravity="center">
+    android:gravity="center"
+    tools:context=".UserActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,6 +16,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="50dp"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,120 +25,70 @@
             android:textColor="@color/white"
             android:textSize="25dp"
             android:textStyle="bold"></TextView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Name"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_marginRight="5dp"></TextView>
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
+
             <EditText
                 android:id="@+id/et_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="9"
+                android:layout_marginBottom="25dp"
+                android:background="@color/white"
+                android:hint="Name"
                 android:inputType="textPersonName"
-                android:layout_marginBottom="25dp"
-                android:textColor="@color/belize_hole"
-                android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:background="@color/white"
                 android:padding="10dp"
-                ></EditText>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Email"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_marginRight="5dp"></TextView>
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="9"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="25dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:background="@color/white"
-                android:padding="10dp"></EditText>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Phone"
-                android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_marginRight="5dp"></TextView>
+                android:textStyle="bold"></EditText>
+
             <EditText
                 android:id="@+id/et_phone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="9"
+                android:background="@color/white"
+                android:hint="Phone"
                 android:inputType="phone"
-                android:layout_marginBottom="25dp"
+                android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:background="@color/white"
-                android:padding="10dp"></EditText>
+                android:textSize="20dp"
+                android:textStyle="bold"></EditText>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginTop="30dp"
             android:gravity="center"
-            android:layout_marginTop="30dp">
+            android:orientation="vertical">
+
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/clouds"
+                android:padding="10dp"
                 android:text="Save"
                 android:textColor="@color/belize_hole"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                android:backgroundTint="@color/clouds"
-                android:padding="10dp"></Button>
+                android:textStyle="bold"></Button>
+
             <Button
                 android:id="@+id/btn_changePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/clouds"
+                android:padding="10dp"
                 android:text="Change Password"
                 android:textColor="@color/belize_hole"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                android:backgroundTint="@color/clouds"
-                android:padding="10dp"></Button>
+                android:textStyle="bold"></Button>
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

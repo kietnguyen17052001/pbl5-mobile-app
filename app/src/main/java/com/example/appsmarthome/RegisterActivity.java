@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     FirebaseAuth auth;
     FirebaseFirestore store;
+    FirebaseUser user;
     DocumentReference documentReference;
     private String userId;
     @Override
@@ -57,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = binding.progressBar;
         auth = FirebaseAuth.getInstance();
         store = FirebaseFirestore.getInstance();
-
         if (auth.getCurrentUser() != null){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -78,13 +80,21 @@ public class RegisterActivity extends AppCompatActivity {
                     password.setError("Password is required");
                     return;
                 }
+                if (TextUtils.isEmpty(_fullName)){
+                    fullName.setError("Name is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(_phone)){
+                    phone.setError("Phone is required");
+                    return;
+                }
                 progressBar.setVisibility(View.VISIBLE);
                 auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "User created", Toast.LENGTH_SHORT).show();
-                            userId = auth.getCurrentUser().getUid();
+                            userId = user.getUid();
                             documentReference = store.collection("users").document(userId);
                             Map<String, Object> user = new HashMap<>();
                             user.put(FULL_NAME, _fullName);

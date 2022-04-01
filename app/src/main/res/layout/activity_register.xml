@@ -44,7 +44,7 @@
                 android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></EditText>
 
             <EditText
@@ -58,7 +58,7 @@
                 android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></EditText>
 
             <EditText
@@ -72,7 +72,7 @@
                 android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></EditText>
 
             <EditText
@@ -85,7 +85,7 @@
                 android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></EditText>
         </LinearLayout>
 

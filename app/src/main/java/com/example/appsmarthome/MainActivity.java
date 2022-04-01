@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore store;
     DocumentReference documentReference;
-    UserObj user = new UserObj();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    user.setFullName(documentSnapshot.getString(FULL_NAME));
-                    user.setEmail(documentSnapshot.getString(EMAIL));
-                    user.setPhone(documentSnapshot.getString(PHONE));
-                    username.setText(username.getText() + user.getFullName());
+//                    user.setFullName(documentSnapshot.getString(FULL_NAME));
+//                    user.setEmail(documentSnapshot.getString(EMAIL));
+//                    user.setPhone(documentSnapshot.getString(PHONE));
+                    username.setText(username.getText() + documentSnapshot.getString(FULL_NAME));
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-                intent.putExtra("user", user);
                 startActivity(intent);
             }
         });
