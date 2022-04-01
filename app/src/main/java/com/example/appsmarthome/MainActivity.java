@@ -5,15 +5,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appsmarthome.Objects.UserObj;
+import com.example.appsmarthome.Prevalent.Prevalent;
 import com.example.appsmarthome.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,18 +28,23 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import io.paperdb.Paper;
+
 public class MainActivity extends AppCompatActivity {
     private static final String FULL_NAME = "fullName";
-    private static final String EMAIL = "email";
-    private static final String PHONE = "phone";
     private ActivityMainBinding binding;
     private Button btnLogout, btnRemote, btnUser;
     private TextView username;
     private String userId;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     FirebaseAuth auth;
     FirebaseFirestore store;
     DocumentReference documentReference;
-
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,17 +57,13 @@ public class MainActivity extends AppCompatActivity {
         username = binding.tvUsername;
         auth = FirebaseAuth.getInstance();
         store = FirebaseFirestore.getInstance();
-//        username.setText(username.getText() + auth.getCurrentUser().getDisplayName());
         userId = auth.getCurrentUser().getUid();
         documentReference = store.collection("users").document(userId);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-//                    user.setFullName(documentSnapshot.getString(FULL_NAME));
-//                    user.setEmail(documentSnapshot.getString(EMAIL));
-//                    user.setPhone(documentSnapshot.getString(PHONE));
-                    username.setText(username.getText() + documentSnapshot.getString(FULL_NAME));
+                    username.setText(username.getText() + documentSnapshot.getString(FULL_NAME) + ", " + dateFormat.format(new Date()));
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -67,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                editor = preferences.edit();
+                editor.putString("remember", "false");
                 auth.signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
@@ -88,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 //    @Override
 //    protected void onStart(){
 //        super.onStart();

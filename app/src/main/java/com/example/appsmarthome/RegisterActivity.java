@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String EMAIL = "email";
     private static final String PHONE = "phone";
     private ActivityRegisterBinding binding;
-    private EditText fullName, email, password, phone;
+    private TextInputLayout fullName, email, password, phone;
     private Button btnRegister;
     private TextView btnLogin;
     private ProgressBar progressBar;
@@ -52,9 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         fullName = binding.etName;
-        email = binding.edEmail;
-        password = binding.edPassword;
-        phone = binding.edPhone;
+        email = binding.etEmail;
+        password = binding.etPassword;
+        phone = binding.etPhone;
         btnRegister = binding.btnSignup;
         btnLogin = binding.tvLogin;
         progressBar = binding.progressBar;
@@ -68,10 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String _fullName = fullName.getText().toString().trim();
-                String _phone = phone.getText().toString().trim();
-                String _email = email.getText().toString().trim();
-                String _password = password.getText().toString().trim();
+                String _fullName = fullName.getEditText().getText().toString().trim();
+                String _phone = phone.getEditText().getText().toString().trim();
+                String _email = email.getEditText().getText().toString().trim();
+                String _password = password.getEditText().getText().toString().trim();
                 if (TextUtils.isEmpty(_email)){
                     email.setError("Email is required");
                     return;
@@ -94,6 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "User created", Toast.LENGTH_SHORT).show();
+                            user = auth.getCurrentUser();
                             userId = user.getUid();
                             documentReference = store.collection("users").document(userId);
                             Map<String, Object> user = new HashMap<>();
@@ -104,6 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Log.d(TAG, "User is created for id:" + userId);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -111,8 +115,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.d(TAG, "Failure:" + e.getMessage());
                                 }
                             });
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
                         }
                         else{
                             Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

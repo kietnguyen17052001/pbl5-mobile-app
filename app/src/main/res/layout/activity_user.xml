@@ -32,32 +32,57 @@
             android:layout_marginTop="40dp"
             android:orientation="vertical">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Email"
                 android:layout_marginBottom="25dp"
-                android:background="@color/white"
-                android:hint="Name"
-                android:inputType="textPersonName"
-                android:padding="10dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="20dp"
-                android:textStyle="bold"></EditText>
+                android:background="@color/white"
+                app:boxStrokeColor="@color/belize_hole"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/belize_hole"
+                app:hintTextColor="@color/belize_hole"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/belize_hole">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="20dp"
+                    android:textColor="@color/belize_hole"
+                    android:textStyle="bold"
+                    android:inputType="textPersonName"
+                    android:background="@color/white"
+                    android:textCursorDrawable="@null"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:hint="Phone"
-                android:inputType="phone"
-                android:padding="10dp"
+                android:layout_marginBottom="25dp"
                 android:textColor="@color/belize_hole"
                 android:textColorHint="@color/belize_hole"
-                android:textSize="20dp"
-                android:textStyle="bold"></EditText>
+                android:background="@color/white"
+                app:boxStrokeColor="@color/belize_hole"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/belize_hole"
+                app:hintTextColor="@color/belize_hole"
+                app:startIconDrawable="@drawable/ic_baseline_phone_24"
+                app:startIconTint="@color/belize_hole">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="20dp"
+                    android:textColor="@color/belize_hole"
+                    android:textStyle="bold"
+                    android:inputType="phone"
+                    android:background="@color/white"
+                    android:textCursorDrawable="@null"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout

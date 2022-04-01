@@ -19,6 +19,7 @@ import com.example.appsmarthome.Objects.UserObj;
 import com.example.appsmarthome.databinding.ActivityUserBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,7 +33,7 @@ public class UserActivity extends AppCompatActivity {
     private static final String PHONE = "phone";
     private String userId;
     private ActivityUserBinding binding;
-    private EditText name, phone;
+    private TextInputLayout name, phone;
     private Button btnSave;
     private ProgressBar progressBar;
     FirebaseAuth auth;
@@ -60,8 +61,8 @@ public class UserActivity extends AppCompatActivity {
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                name.setText(documentSnapshot.getString(FULL_NAME));
-                phone.setText(documentSnapshot.getString(PHONE));
+                name.getEditText().setText(documentSnapshot.getString(FULL_NAME));
+                phone.getEditText().setText(documentSnapshot.getString(PHONE));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -72,8 +73,8 @@ public class UserActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String _name = name.getText().toString();
-                String _phone = phone.getText().toString();
+                String _name = name.getEditText().getText().toString();
+                String _phone = phone.getEditText().getText().toString();
                 if (TextUtils.isEmpty(_name)){
                     name.setError("Name is required");
                     return;
