@@ -30,7 +30,7 @@ public class RemoteActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormat;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    private Boolean flag;
+    private String value_led_living_room, value_led_bedroom, value_led_kitchen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +54,11 @@ public class RemoteActivity extends AppCompatActivity {
         time_use_living_room = binding.tvTimeUseLedLivingRoom;
         time_use_bedroom = binding.tvTimeUseLedBedroom;
         time_use_kitchen = binding.tvTimeUseLedKitchen;
-        flag = false;
         databaseReference.child("led_livingroom").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if (value.equals("OFF")) {
+                value_led_living_room = snapshot.getValue(String.class);
+                if (value_led_living_room.equals("OFF")) {
                     led_living_room.setChecked(false);
                 } else {
                     led_living_room.setChecked(true);
@@ -68,7 +67,7 @@ public class RemoteActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String time = snapshot.getValue(String.class);
-                        if (value.equals("OFF")) {
+                        if (value_led_living_room.equals("OFF")) {
                             time_on_off_living_room.setText("Turn off at: " + time);
                         } else {
                             time_on_off_living_room.setText("Turn on at: " + time);
@@ -90,8 +89,8 @@ public class RemoteActivity extends AppCompatActivity {
         databaseReference.child("led_bedroom").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if (value.equals("OFF")) {
+                value_led_bedroom = snapshot.getValue(String.class);
+                if (value_led_bedroom.equals("OFF")) {
                     led_bedroom.setChecked(false);
                 } else {
                     led_bedroom.setChecked(true);
@@ -100,7 +99,7 @@ public class RemoteActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String time = snapshot.getValue(String.class);
-                        if (value.equals("OFF")) {
+                        if (value_led_bedroom.equals("OFF")) {
                             time_on_off_bedroom.setText("Turn off at: " + time);
                         } else {
                             time_on_off_bedroom.setText("Turn on at: " + time);
@@ -122,8 +121,8 @@ public class RemoteActivity extends AppCompatActivity {
         databaseReference.child("led_kitchen").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if (value.equals("OFF")) {
+                value_led_kitchen = snapshot.getValue(String.class);
+                if (value_led_kitchen.equals("OFF")) {
                     led_kitchen.setChecked(false);
                 } else {
                     led_kitchen.setChecked(true);
@@ -132,7 +131,7 @@ public class RemoteActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String time = snapshot.getValue(String.class);
-                        if (value.equals("OFF")) {
+                        if (value_led_kitchen.equals("OFF")) {
                             time_on_off_kitchen.setText("Turn off at: " + time);
                         } else {
                             time_on_off_kitchen.setText("Turn on at: " + time);
@@ -151,39 +150,63 @@ public class RemoteActivity extends AppCompatActivity {
 
             }
         });
+
+//        if (value_led_living_room.equals("ON") && value_led_bedroom.equals("ON") && value_led_kitchen.equals("ON")){
+//            led_all.setChecked(true);
+//        }
+//        else if (value_led_living_room.equals("OFF") && value_led_bedroom.equals("OFF") && value_led_kitchen.equals("OFF")){
+//            led_all.setChecked(false);
+//        }
+
         led_living_room.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    databaseReference.child("led_livingroom").setValue("ON");
+                    if (value_led_living_room.equals("OFF")) {
+                        databaseReference.child("led_livingroom").setValue("ON");
+                        databaseReference.child("time_on_off_led_livingroom").setValue(dateFormat.format(new Date()));
+                    }
                 } else {
-                    databaseReference.child("led_livingroom").setValue("OFF");
+                    if (value_led_living_room.equals("ON")) {
+                        databaseReference.child("led_livingroom").setValue("OFF");
+                        databaseReference.child("time_on_off_led_livingroom").setValue(dateFormat.format(new Date()));
+                    }
                 }
-                databaseReference.child("time_on_off_led_livingroom").setValue(dateFormat.format(new Date()));
             }
         });
         led_kitchen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    databaseReference.child("led_kitchen").setValue("ON");
+                    if (value_led_kitchen.equals("OFF")) {
+                        databaseReference.child("led_kitchen").setValue("ON");
+                        databaseReference.child("time_on_off_led_kitchen").setValue(dateFormat.format(new Date()));
+                    }
                 } else {
-                    databaseReference.child("led_kitchen").setValue("OFF");
+                    if (value_led_kitchen.equals("ON")) {
+                        databaseReference.child("led_kitchen").setValue("OFF");
+                        databaseReference.child("time_on_off_led_kitchen").setValue(dateFormat.format(new Date()));
+                    }
                 }
-                databaseReference.child("time_on_off_led_kitchen").setValue(dateFormat.format(new Date()));
             }
         });
         led_bedroom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    databaseReference.child("led_bedroom").setValue("ON");
+                    if (value_led_bedroom.equals("OFF")) {
+                        databaseReference.child("led_bedroom").setValue("ON");
+                        databaseReference.child("time_on_off_led_bedroom").setValue(dateFormat.format(new Date()));
+                    }
                 } else {
-                    databaseReference.child("led_bedroom").setValue("OFF");
+                    if (value_led_bedroom.equals("ON")) {
+                        databaseReference.child("led_bedroom").setValue("OFF");
+                        databaseReference.child("time_on_off_led_bedroom").setValue(dateFormat.format(new Date()));
+                    }
                 }
-                databaseReference.child("time_on_off_led_bedroom").setValue(dateFormat.format(new Date()));
             }
         });
+
         led_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
