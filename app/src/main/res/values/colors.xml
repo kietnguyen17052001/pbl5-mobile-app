@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="belize_hole">#2980b9</color>
     <color name="clouds">#ecf0f1</color>
+    <color name="protoss_pylon">#00a8ff</color>
+    <color name="vanadyl_blue">#0097e6</color>
 </resources>

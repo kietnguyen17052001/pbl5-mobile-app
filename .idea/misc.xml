@@ -3,16 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_broadcast_on_home_24.xml" value="0.133" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.175" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.157" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.175" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.175" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_phone_24.xml" value="0.175" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_settings_remote_24.xml" value="0.157" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_launcher_background.xml" value="0.133" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_main.xml" value="0.184375" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_register.xml" value="0.1703125" />
-        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_remote.xml" value="0.16875" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_remote.xml" value="0.22" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_user.xml" value="0.184375" />
       </map>
     </option>
