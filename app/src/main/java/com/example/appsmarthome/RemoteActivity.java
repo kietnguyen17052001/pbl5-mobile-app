@@ -111,6 +111,7 @@ public class RemoteActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     preTime = snapshot.child(getPath(led, dayOfWeek)).getValue(Integer.class);
+                    databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(difference));
                 }
 
                 @Override
@@ -118,7 +119,6 @@ public class RemoteActivity extends AppCompatActivity {
 
                 }
             });
-            databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(difference));
         } else {
             long different_pre = LocalDateTime.of(preDate.getYear(), preDate.getMonth(), preDate.getDay(), preDate.getHours(), preDate.getMinutes(), preDate.getSeconds()).until(endOfDay, ChronoUnit.MILLIS);
             long different_cur = LocalDateTime.of(endOfDay.getYear(), endOfDay.getMonth(), endOfDay.getDayOfMonth(), 0, 0, 0).until(currentDate, ChronoUnit.MILLIS);
@@ -128,6 +128,7 @@ public class RemoteActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     preTime = snapshot.child(getPath(led, dayOfWeek)).getValue(Integer.class);
+                    databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(different_pre));
                 }
 
                 @Override
@@ -135,13 +136,13 @@ public class RemoteActivity extends AppCompatActivity {
 
                 }
             });
-            databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(different_pre));
             // for current time
             dayOfWeek = currentDate.getDayOfWeek();
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     preTime = snapshot.child(getPath(led, dayOfWeek)).getValue(Integer.class);
+                    databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(different_cur));
                 }
 
                 @Override
@@ -149,7 +150,6 @@ public class RemoteActivity extends AppCompatActivity {
 
                 }
             });
-            databaseReference.child(getPath(led, dayOfWeek)).setValue(preTime + convertToMinutes(different_cur));
         }
     }
 
