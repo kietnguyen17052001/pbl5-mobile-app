@@ -12,9 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSmartHome">
         <activity
+            android:name=".KitchenChart"
+            android:exported="false"
+            android:parentActivityName=".RemoteActivity"/>
+        <activity
+            android:name=".BedRoomChart"
+            android:exported="false"
+            android:parentActivityName=".RemoteActivity"/>
+        <activity
+            android:name=".LivingRoomChart"
+            android:exported="false"
+            android:parentActivityName=".RemoteActivity"/>
+        <activity
             android:name=".UserActivity"
-            android:parentActivityName=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".RemoteActivity"
             android:exported="false"

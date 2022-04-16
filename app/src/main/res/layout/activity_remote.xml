@@ -104,6 +104,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/ll_living_room"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_marginRight="5dp"
@@ -113,6 +114,7 @@
                     android:padding="5dp">
 
                     <TextView
+                        android:id="@+id/tv_led_living_room"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Livingroom led"
@@ -148,6 +150,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_bed_room"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_weight="1"
@@ -156,6 +159,7 @@
                     android:padding="5dp">
 
                     <TextView
+                        android:id="@+id/tv_led_bed_room"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bedroom led"
@@ -192,6 +196,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_kitchen_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -208,6 +213,7 @@
                     android:padding="5dp">
 
                     <TextView
+                        android:id="@+id/tv_led_kitchen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Kitchen led"
