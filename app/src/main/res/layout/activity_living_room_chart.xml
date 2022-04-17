@@ -5,8 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LivingRoomChart">
+<!--    <com.github.mikephil.charting.charts.BarChart-->
+<!--        android:id="@+id/bc_living_room"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"></com.github.mikephil.charting.charts.BarChart>-->
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bc_living_room"
+        android:id="@+id/bar_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></com.github.mikephil.charting.charts.BarChart>
 </LinearLayout>

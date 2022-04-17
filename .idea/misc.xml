@@ -12,8 +12,11 @@
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_baseline_settings_remote_24.xml" value="0.157" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/drawable/ic_launcher_background.xml" value="0.133" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_bed_room_chart.xml" value="0.1796875" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_bed_room_line_chart.xml" value="0.18297101449275363" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_kitchen_chart.xml" value="0.1796875" />
-        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_living_room_chart.xml" value="0.1796875" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_kitchen_line_chart.xml" value="0.184375" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_living_room_chart.xml" value="0.14948453608247422" />
+        <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_living_room_line_chart.xml" value="0.184375" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_main.xml" value="0.184375" />
         <entry key="..\:/Kiet/Mobile/Android/AppSmartHome/app/src/main/res/layout/activity_register.xml" value="0.1703125" />
