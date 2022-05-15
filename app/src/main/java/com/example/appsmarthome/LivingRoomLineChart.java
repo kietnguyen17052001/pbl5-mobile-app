@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.appsmarthome.databinding.ActivityLivingRoomLineChartBinding;
@@ -29,8 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class LivingRoomLineChart extends AppCompatActivity implements OnChartValueSelectedListener {
-
+public class LivingRoomLineChart extends AppCompatActivity {
+    private static final String ledLivingRoom = "led_livingroom";
     private ActivityLivingRoomLineChartBinding binding;
     private List<Integer> listDays;
     private LineChart lineChart;
@@ -39,30 +42,31 @@ public class LivingRoomLineChart extends AppCompatActivity implements OnChartVal
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
-    public void lineChart(int month) {
+    public void chartMonths() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
         List<Integer> list = new ArrayList<>();
-        databaseReference.child("leds/led_bedroom/details").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("leds/" + ledLivingRoom + "/details").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (int i = 0; i <= 30; i++) {
+                for (int i = 0; i <= 11; i++) {
                     list.add(0);
                 }
                 for (DataSnapshot data : snapshot.getChildren()) {
                     try {
                         Date dFirebase = dateFormat.parse(data.child("timeStart").getValue(String.class));
-                        if (dFirebase.getYear() == new Date().getYear() && dFirebase.getMonth() == month) {
-                            int index = dFirebase.getDay() - 1;
+                        if (dFirebase.getYear() == new Date().getYear()) {
+                            int index = dFirebase.getMonth();
                             list.set(index, list.get(index) + (int) TimeUnit.SECONDS.toMinutes(data.child("seconds").getValue(Integer.class)));
                         }
                     } catch (Exception e) {
                         Log.d("Error", e.getMessage());
                     }
                 }
-                Intent intent = new Intent(getApplicationContext(), LivingRoomLineChart.class);
-                intent.putExtra("month", month);
-                intent.putIntegerArrayListExtra("listDays", (ArrayList<Integer>) list);
-                startActivity(intent);
+                Intent intent = new Intent();
+                intent.putIntegerArrayListExtra("listMonth", (ArrayList<Integer>) list);
+                finish();
             }
 
             @Override
@@ -82,7 +86,6 @@ public class LivingRoomLineChart extends AppCompatActivity implements OnChartVal
         Intent intent = getIntent();
         listDays = intent.getIntegerArrayListExtra("listDays");
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Usage time of " + intent.getIntExtra("month", 0));
         entryList = new ArrayList<>();
         for (int i = 0; i < listDays.size(); i++) {
@@ -97,15 +100,18 @@ public class LivingRoomLineChart extends AppCompatActivity implements OnChartVal
     }
 
     @Override
-    public void onValueSelected(Entry e, Highlight h) {
-        int month = (int) e.getX();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        lineChart(month);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public void onNothingSelected() {
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.btn_back) {
+            chartMonths();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

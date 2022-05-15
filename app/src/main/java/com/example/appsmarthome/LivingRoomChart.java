@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.example.appsmarthome.databinding.ActivityKitchenChartBinding;
 import com.example.appsmarthome.databinding.ActivityLivingRoomChartBinding;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LivingRoomChart extends AppCompatActivity {
     private ActivityLivingRoomChartBinding binding;
-    private List<Integer> listTimes;
+    private List<Integer> times;
     private BarChart chart;
     private List<BarEntry> entryList;
     private FirebaseDatabase firebaseDatabase;
@@ -47,7 +46,7 @@ public class LivingRoomChart extends AppCompatActivity {
     public void lineChart(int month) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         List<Integer> list = new ArrayList<>();
-        databaseReference.child("leds/led_livingroom/details").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("leds/led_livingroom/details").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (int i = 0; i <= 30; i++) {
@@ -66,7 +65,7 @@ public class LivingRoomChart extends AppCompatActivity {
                         Log.d("Error", e.getMessage());
                     }
                 }
-                Intent intent = new Intent(getApplicationContext(), LivingRoomLineChart.class);
+                Intent intent = new Intent(LivingRoomChart.this, LivingRoomLineChart.class);
                 intent.putExtra("month", month);
                 intent.putIntegerArrayListExtra("listDays", (ArrayList<Integer>) list);
                 startActivity(intent);
@@ -90,10 +89,10 @@ public class LivingRoomChart extends AppCompatActivity {
         actionBar.setTitle("Living room led chart");
         Intent intent = getIntent();
         entryList = new ArrayList<>();
-        listTimes = intent.getIntegerArrayListExtra("listMonth");
+        times = intent.getIntegerArrayListExtra("listMonth");
         chart = binding.barChart;
-        for (int i = 0; i < listTimes.size(); i++) {
-            entryList.add(new BarEntry(i + 1, listTimes.get(i)));
+        for (int i = 0; i < times.size(); i++) {
+            entryList.add(new BarEntry(i + 1, times.get(i)));
         }
         BarDataSet barDataSet = new BarDataSet(entryList, "minutes");
         barDataSet.setColor(Color.rgb(41, 128, 185));

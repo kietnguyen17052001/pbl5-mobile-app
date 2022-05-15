@@ -1,6 +1,7 @@
 package com.example.appsmarthome;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,13 +9,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.appsmarthome.Objects.Led;
 import com.example.appsmarthome.Objects.TimeUsing;
 import com.example.appsmarthome.databinding.ActivityRemoteBinding;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,20 +34,20 @@ import java.util.concurrent.TimeUnit;
 
 public class RemoteActivity extends AppCompatActivity {
     private ActivityRemoteBinding binding;
-    private Switch led_living_room, led_bedroom, led_kitchen, led_all;
-    private TextView time_on_off_living_room, time_on_off_bedroom, time_on_off_kitchen,
-            btn_show_chart_living_room, btn_show_chart_bedroom, btn_show_chart_kitchen;
-    private static final String LED_LIVING_ROOM = "led_livingroom", LED_BEDROOM = "led_bedroom", LED_KITCHEN = "led_kitchen";
+    private Switch ledMode, ledLivingRoom, ledBedRoom, ledAll;
+    private TextView timeOnOff, timeOnOffLivingRoom, timeOnOffBedRoom;
+    private Button statisticLivingRoom, statisticBedRoom;
+    private static final String LED_LIVING_ROOM = "led_livingroom", LED_BEDROOM = "led_bedroom";
     private StringBuilder builder;
     private SimpleDateFormat dateFormat;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    private String value_led_living_room, value_led_bedroom, value_led_kitchen;
-    private String path;
-    private Date preDateLedLivingRoom, preDateLedBedRoom, preDateLedKitchen;
     private int minutes;
-    private boolean isTurnOn = true;
-    private List<Integer> listTimes;
+    private List<Integer> times;
+    private boolean setup = true, isTurnOnAll = true;
+    private Led led;
+    private List<Led> lLed;
+    private int iLed;
 
     // add TimeUsing into firebase
     public void addTimeUsing(String led, Date timeStart) {
@@ -54,11 +59,59 @@ public class RemoteActivity extends AppCompatActivity {
         databaseReference.child("leds/" + led + "/details").push().setValue(timeUsing);
     }
 
+    public boolean onAll() {
+        for (Led led : lLed) {
+            if (led.getMode().equals("OFF")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void switchEventAll(boolean isChecked) {
+        if (isChecked) {
+            if (!ledLivingRoom.isChecked()) {
+                ledLivingRoom.setChecked(true);
+            }
+            if (!ledBedRoom.isChecked()) {
+                ledBedRoom.setChecked(true);
+            }
+        } else {
+            if (onAll()) {
+                if (ledLivingRoom.isChecked()) {
+                    ledLivingRoom.setChecked(false);
+                }
+                if (ledBedRoom.isChecked()) {
+                    ledBedRoom.setChecked(false);
+                }
+            }
+        }
+    }
+
+    public void switchEvent(boolean isChecked, Led led) {
+        if (isChecked) {
+            if (led.getMode().equals("OFF")) {
+                led.setMode("ON");
+                databaseReference.child("leds/" + led.getName() + "/mode").setValue("ON");
+                databaseReference.child("leds/" + led.getName() + "/time_on_off").setValue(dateFormat.format(new Date()));
+                ledAll.setChecked(onAll() ? true : false);
+            }
+        } else {
+            if (led.getMode().equals("ON")) {
+                led.setMode("OFF");
+                addTimeUsing(led.getName(), led.getTimeOn());
+                databaseReference.child("leds/" + led.getName() + "/mode").setValue("OFF");
+                databaseReference.child("leds/" + led.getName() + "/time_on_off").setValue(dateFormat.format(new Date()));
+                ledAll.setChecked(false);
+            }
+        }
+    }
+
     // ----- Charts -----
 
     public void chartMonths(String led) {
         List<Integer> list = new ArrayList<>();
-        databaseReference.child("leds/" + led + "/details").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("leds/" + led + "/details").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (int i = 0; i <= 11; i++) {
@@ -77,9 +130,6 @@ public class RemoteActivity extends AppCompatActivity {
                 }
                 Intent intent = null;
                 switch (led) {
-                    case LED_KITCHEN:
-                        intent = new Intent(RemoteActivity.this, KitchenChart.class);
-                        break;
                     case LED_BEDROOM:
                         intent = new Intent(RemoteActivity.this, BedRoomChart.class);
                         break;
@@ -87,7 +137,6 @@ public class RemoteActivity extends AppCompatActivity {
                         intent = new Intent(RemoteActivity.this, LivingRoomChart.class);
                         break;
                 }
-                Log.d("list", String.valueOf(list.size()));
                 intent.putIntegerArrayListExtra("listMonth", (ArrayList<Integer>) list);
                 startActivity(intent);
             }
@@ -112,127 +161,69 @@ public class RemoteActivity extends AppCompatActivity {
         dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        led_living_room = binding.swLivingRoom;
-        led_kitchen = binding.swKitchen;
-        led_bedroom = binding.swBedroom;
-        led_all = binding.swAll;
-        time_on_off_living_room = binding.tvTimeOnOffLedLivingRoom;
-        time_on_off_bedroom = binding.tvTimeOnOffLedBedroom;
-        time_on_off_kitchen = binding.tvTimeOnOffLedKitchen;
-        btn_show_chart_bedroom = binding.tvLedBedRoom;
-        btn_show_chart_living_room = binding.tvLedLivingRoom;
-        btn_show_chart_kitchen = binding.tvLedKitchen;
-        listTimes = new ArrayList<>();
-        databaseReference.child("leds/" + LED_LIVING_ROOM + "/mode").addValueEventListener(new ValueEventListener() {
+        ledLivingRoom = binding.swLivingRoom;
+        ledBedRoom = binding.swBedroom;
+        ledAll = binding.swAll;
+        timeOnOffLivingRoom = binding.tvTimeOnOffLedLivingRoom;
+        timeOnOffBedRoom = binding.tvTimeOnOffLedBedRoom;
+        statisticLivingRoom = binding.btnStatisticLivingroom;
+        statisticBedRoom = binding.btnStatisticBedRoom;
+        times = new ArrayList<>();
+        lLed = new ArrayList<>();
+        databaseReference.child("leds").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                value_led_living_room = snapshot.getValue(String.class);
-                if (value_led_living_room.equals("OFF")) {
-                    led_living_room.setChecked(false);
-                    isTurnOn = false;
-                } else {
-                    led_living_room.setChecked(true);
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                led = new Led();
+                led.setId(snapshot.child("id").getValue(Integer.class));
+                led.setName((led.getId() == 0) ? LED_BEDROOM : LED_LIVING_ROOM);
+                ledMode = ((led.getId() == 0) ? ledBedRoom : ledLivingRoom);
+                timeOnOff = ((led.getId() == 0) ? timeOnOffBedRoom : timeOnOffLivingRoom);
+                led.setMode(snapshot.child("mode").getValue(String.class));
+                String time = snapshot.child("time_on_off").getValue(String.class);
+                if (led.getMode().equals("OFF")) {
+                    timeOnOff.setText("Turn off at: " + time);
+                } else if (led.getMode().equals("ON")) {
+                    try {
+                        led.setTimeOn(dateFormat.parse(time));
+                    } catch (Exception e) {
+                    }
+                    timeOnOff.setText("Turn on at: " + time);
                 }
-                databaseReference.child("leds/" + LED_LIVING_ROOM + "/time_on_off").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String time = snapshot.getValue(String.class);
-                        if (value_led_living_room.equals("OFF")) {
-                            time_on_off_living_room.setText("Turn off at: " + time);
-                        } else {
-                            time_on_off_living_room.setText("Turn on at: " + time);
-                            try {
-                                preDateLedLivingRoom = dateFormat.parse(time);
-                            } catch (Exception e) {
-                                Log.d("Error: ", e.getMessage());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                lLed.add(led);
+                ledMode.setChecked((led.getMode().equals("ON")) ? true : false);
+                if (lLed.size() == 2) {
+                    ledAll.setChecked(onAll() ? true : false);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        databaseReference.child("leds/" + LED_BEDROOM + "/mode").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                value_led_bedroom = snapshot.getValue(String.class);
-                if (value_led_bedroom.equals("OFF")) {
-                    led_bedroom.setChecked(false);
-                    isTurnOn = false;
-                } else {
-                    led_bedroom.setChecked(true);
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                led = lLed.get(snapshot.child("id").getValue(Integer.class));
+                led.setMode(snapshot.child("mode").getValue(String.class));
+                String time = snapshot.child("time_on_off").getValue(String.class);
+                ledMode = (led.getId() == 0) ? ledBedRoom : ledLivingRoom;
+                timeOnOff = (led.getId() == 0) ? timeOnOffBedRoom : timeOnOffLivingRoom;
+                if (led.getMode().equals("OFF")) {
+                    timeOnOff.setText("Turn off at: " + time);
+                } else if (led.getMode().equals("ON")) {
+                    try {
+                        led.setTimeOn(dateFormat.parse(time));
+                    } catch (Exception e) {
+                    }
+                    timeOnOff.setText("Turn on at: " + time);
                 }
-                databaseReference.child("leds/" + LED_BEDROOM + "/time_on_off").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String time = snapshot.getValue(String.class);
-                        if (value_led_bedroom.equals("OFF")) {
-                            time_on_off_bedroom.setText("Turn off at: " + time);
-                        } else {
-                            time_on_off_bedroom.setText("Turn on at: " + time);
-                            try {
-                                preDateLedBedRoom = dateFormat.parse(time);
-                            } catch (Exception e) {
-                                Log.d("Error: ", e.getMessage());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                ledMode.setChecked((led.getMode().equals("ON")) ? true : false);
+                ledAll.setChecked(onAll() ? true : false);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
-        });
-        databaseReference.child("leds/" + LED_KITCHEN + "/mode").addValueEventListener(new ValueEventListener() {
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                value_led_kitchen = snapshot.getValue(String.class);
-                if (value_led_kitchen.equals("OFF")) {
-                    led_kitchen.setChecked(false);
-                    isTurnOn = false;
-                } else {
-                    led_kitchen.setChecked(true);
-                }
-                if (isTurnOn) {
-                    led_all.setChecked(true);
-                }
-                databaseReference.child("leds/" + LED_KITCHEN + "/time_on_off").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String time = snapshot.getValue(String.class);
-                        if (value_led_kitchen.equals("OFF")) {
-                            time_on_off_kitchen.setText("Turn off at: " + time);
-                        } else {
-                            time_on_off_kitchen.setText("Turn on at: " + time);
-                            try {
-                                preDateLedKitchen = dateFormat.parse(time);
-                            } catch (Exception e) {
-                                Log.d("Error: ", e.getMessage());
-                            }
-                        }
-                    }
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
 
             @Override
@@ -241,119 +232,40 @@ public class RemoteActivity extends AppCompatActivity {
             }
         });
 
-
-        led_living_room.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ledLivingRoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    if (value_led_living_room.equals("OFF")) {
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                        if (led_bedroom.isChecked() && led_kitchen.isChecked()) {
-                            led_all.setChecked(true);
-                        }
-                    }
-                } else {
-                    if (value_led_living_room.equals("ON")) {
-                        addTimeUsing(LED_LIVING_ROOM, preDateLedLivingRoom);
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                }
-            }
-        });
-        led_kitchen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    if (value_led_kitchen.equals("OFF")) {
-                        databaseReference.child("leds/" + LED_KITCHEN + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_KITCHEN + "/time_on_off").setValue(dateFormat.format(new Date()));
-                        if (led_bedroom.isChecked() && led_living_room.isChecked()) {
-                            led_all.setChecked(true);
-                        }
-                    }
-                } else {
-                    if (value_led_kitchen.equals("ON")) {
-                        addTimeUsing(LED_KITCHEN, preDateLedKitchen);
-                        databaseReference.child("leds/" + LED_KITCHEN + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_KITCHEN + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                }
-            }
-        });
-        led_bedroom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    if (value_led_bedroom.equals("OFF")) {
-                        databaseReference.child("leds/" + LED_BEDROOM + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_BEDROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                        if (led_living_room.isChecked() && led_kitchen.isChecked()) {
-                            led_all.setChecked(true);
-                        }
-                    }
-                } else {
-                    if (value_led_bedroom.equals("ON")) {
-                        addTimeUsing(LED_BEDROOM, preDateLedBedRoom);
-                        databaseReference.child("leds/" + LED_BEDROOM + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_BEDROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                }
+                Led led = (lLed != null && lLed.size() != 0) ? lLed.get(1) : null;
+                switchEvent(isChecked, led);
             }
         });
 
-        led_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ledBedRoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    if (!led_bedroom.isChecked()) {
-                        databaseReference.child("leds/" + LED_BEDROOM + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_BEDROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                    if (!led_living_room.isChecked()) {
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                    if (!led_kitchen.isChecked()) {
-                        databaseReference.child("leds/" + LED_KITCHEN + "/mode").setValue("ON");
-                        databaseReference.child("leds/" + LED_KITCHEN + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                } else {
-                    if (led_bedroom.isChecked()) {
-                        databaseReference.child("leds/" + LED_BEDROOM + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_BEDROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                    if (led_living_room.isChecked()) {
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_LIVING_ROOM + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                    if (led_kitchen.isChecked()) {
-                        databaseReference.child("leds/" + LED_KITCHEN + "/mode").setValue("OFF");
-                        databaseReference.child("leds/" + LED_KITCHEN + "/time_on_off").setValue(dateFormat.format(new Date()));
-                    }
-                }
+                Led led = (lLed != null && lLed.size() != 0) ? lLed.get(0) : null;
+                switchEvent(isChecked, led);
             }
         });
 
-        btn_show_chart_living_room.setOnClickListener(new View.OnClickListener() {
+        ledAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                switchEventAll(isChecked);
+            }
+        });
+
+        statisticLivingRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 chartMonths(LED_LIVING_ROOM);
             }
         });
 
-        btn_show_chart_bedroom.setOnClickListener(new View.OnClickListener() {
+        statisticBedRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 chartMonths(LED_BEDROOM);
-            }
-        });
-
-        btn_show_chart_kitchen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chartMonths(LED_KITCHEN);
             }
         });
     }

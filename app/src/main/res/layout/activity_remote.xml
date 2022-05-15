@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="3 devices"
+                    android:text="2 devices"
                     android:textColor="@color/black"
                     android:textSize="10dp"></TextView>
                 <LinearLayout
@@ -114,7 +114,7 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/tv_led_living_room"
+                        android:id="@+id/tv_ledLivingRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Livingroom led"
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"></Switch>
 
                     <TextView
-                        android:id="@+id/tv_time_on_off_led_living_room"
+                        android:id="@+id/tv_time_on_off_ledLivingRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -136,7 +136,7 @@
                         android:textStyle="bold"></TextView>
 
                     <TextView
-                        android:id="@+id/tv_time_use_led_living_room"
+                        android:id="@+id/tv_time_use_ledLivingRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -173,7 +173,7 @@
                         android:layout_height="wrap_content"></Switch>
 
                     <TextView
-                        android:id="@+id/tv_time_on_off_led_bedroom"
+                        android:id="@+id/tv_time_on_off_ledBedRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -181,7 +181,7 @@
                         android:textStyle="bold"></TextView>
 
                     <TextView
-                        android:id="@+id/tv_time_use_led_bedroom"
+                        android:id="@+id/tv_time_use_ledBedRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -194,60 +194,28 @@
                         android:src="@drawable/bed_room"></ImageView>
                 </LinearLayout>
             </LinearLayout>
-
             <LinearLayout
-                android:id="@+id/ll_kitchen_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
-
-                <LinearLayout
+                <Button
+                    android:id="@+id/btn_statistic_livingroom"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/tv_led_kitchen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kitchen led"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
-
-                    <Switch
-                        android:id="@+id/sw_kitchen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"></Switch>
-
-                    <TextView
-                        android:id="@+id/tv_time_on_off_led_kitchen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="15dp"
-                        android:textStyle="bold"></TextView>
-
-                    <TextView
-                        android:id="@+id/tv_time_use_led_kitchen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="15dp"
-                        android:textStyle="bold"></TextView>
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/kitchen"></ImageView>
-                </LinearLayout>
-
+                    android:layout_marginRight="5dp"
+                    android:text="Statistic"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/belize_hole"></Button>
+                <Button
+                    android:id="@+id/btn_statisticBedRoom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Statistic"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/belize_hole"></Button>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
